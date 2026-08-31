@@ -21,17 +21,11 @@ defmodule HelloLiveView.Ups do
 
   @impl GenServer
   def init(_opts) do
-    state = %{i2c: nil, latest: nil, subs: %{}}
-
-    case HW.Ups.open() do
-      {:ok, i2c} ->
-        Process.send_after(self(), :poll, @poll_ms)
-        {:ok, %{state | i2c: i2c}}
-
-      {:error, _} ->
-        {:ok, state}
-    end
+    {:ok, %{i2c: nil, latest: nil, subs: %{}}, {:continue, :open}}
   end
+
+  @impl GenServer
+  def handle_continue(:open, state), do: {:noreply, try_open(state)}
 
   @impl GenServer
   def handle_call({:subscribe, pid}, _from, state) do
@@ -63,7 +57,23 @@ defmodule HelloLiveView.Ups do
     {:noreply, state}
   end
 
+  def handle_info(:open, state), do: {:noreply, try_open(state)}
+
   def handle_info({:DOWN, _ref, :process, pid, _reason}, state) do
     {:noreply, %{state | subs: Map.delete(state.subs, pid)}}
+  end
+
+  # The i2c bus appears ~10s into boot, after this process starts, so
+  # keep retrying until it shows up.
+  defp try_open(state) do
+    case HW.Ups.open() do
+      {:ok, i2c} ->
+        Process.send_after(self(), :poll, @poll_ms)
+        %{state | i2c: i2c}
+
+      {:error, _} ->
+        Process.send_after(self(), :open, 2_000)
+        state
+    end
   end
 end

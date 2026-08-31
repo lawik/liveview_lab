@@ -20,11 +20,11 @@ defmodule HelloLiveView.Buzzer do
 
   @impl GenServer
   def init(_opts) do
-    case HW.Buzzer.open() do
-      {:ok, io} -> {:ok, %{io: io, timer: nil}}
-      {:error, _} -> {:ok, %{io: nil, timer: nil}}
-    end
+    {:ok, %{io: nil, timer: nil}, {:continue, :open}}
   end
+
+  @impl GenServer
+  def handle_continue(:open, state), do: {:noreply, try_open(state)}
 
   @impl GenServer
   def handle_cast(_msg, %{io: nil} = state), do: {:noreply, state}
@@ -45,5 +45,20 @@ defmodule HelloLiveView.Buzzer do
   def handle_info(:off, state) do
     HW.Buzzer.bell(state.io, false)
     {:noreply, %{state | timer: nil}}
+  end
+
+  def handle_info(:open, state), do: {:noreply, try_open(state)}
+
+  # The beeper input device appears ~10s into boot, after this process
+  # starts, so keep retrying until it shows up.
+  defp try_open(state) do
+    case HW.Buzzer.open() do
+      {:ok, io} ->
+        %{state | io: io}
+
+      {:error, _} ->
+        Process.send_after(self(), :open, 2_000)
+        state
+    end
   end
 end

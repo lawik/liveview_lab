@@ -20,17 +20,10 @@ defmodule HelloLiveView.Rgb do
 
   @impl GenServer
   def init(_opts) do
-    if HW.Rgb.present?() do
-      Enum.each([:red, :green, :blue], &HW.Rgb.set(&1, false))
-      {:ok, %{present: true, color: {false, false, false}}}
-    else
-      {:ok, %{present: false, color: {false, false, false}}}
-    end
+    {:ok, %{color: {false, false, false}}}
   end
 
   @impl GenServer
-  def handle_cast(_msg, %{present: false} = state), do: {:noreply, state}
-
   def handle_cast({:set, red?, green?, blue?}, state) do
     HW.Rgb.set(:red, red?)
     HW.Rgb.set(:green, green?)
