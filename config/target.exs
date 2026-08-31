@@ -124,3 +124,25 @@ config :mdns_lite,
 # Uncomment to use target specific configurations
 
 # import_config "#{Mix.target()}.exs"
+
+if Mix.target() == :rpi5 do
+  hailo_cache =
+    [System.user_home!(), ".local/share/nerves/nbpr", "nbpr_hailo8-*-nerves_system_rpi5-*"]
+    |> Path.join()
+    |> Path.wildcard()
+    |> Enum.filter(&File.dir?/1)
+    |> List.last()
+
+  if is_nil(hailo_cache) do
+    Mix.raise("""
+    No nbpr_hailo8 artifact found in the NBPR cache. Build it first:
+
+        cd ../nbpr && MIX_TARGET=rpi5 mix nbpr.build NBPR.Hailo8
+    """)
+  end
+
+  config :bodge_hailo,
+    backend: :hailo8,
+    hailo8_include_dir: Path.join(hailo_cache, "staging/usr/include"),
+    hailo8_lib_dir: Path.join(hailo_cache, "staging/usr/lib")
+end

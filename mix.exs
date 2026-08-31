@@ -76,6 +76,12 @@ defmodule HelloLiveView.MixProject do
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
+      {:circuits_i2c, "~> 2.1"},
+
+      # Hailo-8 stack, unused for now but shipped so it can be poked at
+      {:bodge_hailo, github: "lawik/bodge_hailo", targets: :rpi5},
+      {:nbpr, path: "../nbpr/nbpr", targets: :rpi5},
+      {:nbpr_hailo8, path: "../nbpr/packages/nbpr_hailo8", targets: :rpi5},
 
       # Dependencies for all targets
       {:nerves, "~> 1.12", runtime: false},
@@ -118,12 +124,15 @@ defmodule HelloLiveView.MixProject do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    [
-      setup: ["deps.get", "assets.setup", "assets.build"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
-    ]
+    firmware = if Mix.target() == :rpi5, do: [firmware: ["nbpr.fetch", "firmware"]], else: []
+
+    firmware ++
+      [
+        setup: ["deps.get", "assets.setup", "assets.build"],
+        "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+        "assets.build": ["tailwind default", "esbuild default"],
+        "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      ]
   end
 
   def release do

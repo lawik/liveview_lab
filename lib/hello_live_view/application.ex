@@ -36,9 +36,9 @@ defmodule HelloLiveView.Application do
 
   def children(_target) do
     [
-      # Children for all targets except host
-      # Starts a worker by calling: HelloLiveView.Worker.start_link(arg)
-      # {HelloLiveView.Worker, arg},
+      {HelloLiveView.Buzzer, []},
+      {HelloLiveView.Rgb, []},
+      {HelloLiveView.Ups, []}
     ]
   end
 
