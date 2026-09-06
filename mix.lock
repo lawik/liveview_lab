@@ -1,6 +1,5 @@
 %{
   "beam_notify": {:hex, :beam_notify, "1.1.1", "da7dd04f16120bcab71f01ff81607ea38ad78af859cd87fad2012eac8feab034", [:make, :mix], [{:elixir_make, "~> 0.6", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm", "5a09fc8449171da423f781de16b95cdec52763e60308345de6f15358c2382a42"},
-  "bodge_hailo": {:git, "https://github.com/lawik/bodge_hailo.git", "142e52e8b4a9e742dd270ea2e24397d9017c455e", []},
   "circuits_i2c": {:hex, :circuits_i2c, "2.1.0", "0656ea5d106744c498a8cd778f39c0685ab574e3da7159814cfbfe709001f0e5", [:make, :mix], [{:elixir_make, "~> 0.6", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm", "3751a875a9d728080fdbc5fd352f728d4746a82e17e52f4444c406200349f6ac"},
   "circular_buffer": {:hex, :circular_buffer, "1.1.0", "af9332c40d600cc27b160eebd9fad1bf0a8106cd62e9f57d6cc8f028d3cc46d1", [:mix], [], "hexpm", "0daa0a4fcb3a7ffabc8576bdbf64c99adc6d4b37eab1185179140769ba58f571"},
   "complex": {:hex, :complex, "0.7.0", "695632ef9487517aa5d57edd1697801079d622414cb2e1a7cf538b1f9a50f205", [:mix], [], "hexpm", "0ee39c0803129f546e7f3f640da8f021c9e659402bf59da6f7f2c4848f068f8d"},
