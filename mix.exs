@@ -77,7 +77,7 @@ defmodule HelloLiveView.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       # Once published: {:recomputer_r22, "~> 0.1"}
-      {:recomputer_r22, path: "../recomputer_r22", targets: :rpi5},
+      {:recomputer_r22, github: "lawik/recomputer_r22", targets: :rpi5},
 
       # Hailo-8 stack, unused for now but shipped so it can be poked at
       {:bodge_hailo, github: "lawik/bodge_hailo", targets: :rpi5},
