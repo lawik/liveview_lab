@@ -36,9 +36,7 @@ defmodule HelloLiveView.Application do
 
   def children(_target) do
     [
-      {HelloLiveView.Buzzer, []},
-      {HelloLiveView.Rgb, []},
-      {HelloLiveView.Ups, []}
+      {RecomputerR22.Supervisor, []}
     ]
   end
 
